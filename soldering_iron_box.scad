@@ -2,13 +2,14 @@
 
 
 
-$fn=50;
+$fn=30;
 nozzle=0.8;
-wall=nozzle*2.5;
+wall=nozzle*2;
+endplateThickness=2.7;
 clearance=0.1;
 //�������
 h=40;
-x=82.5; 
+x=84; 
 y=180;
 powersupply_y=58;
 
@@ -27,15 +28,14 @@ translate([-0.5,wall,h/2]) rotate([90,0,0])
 module frontpanel(){
 	x=x-wall*2-clearance*2;
 	h=h-wall*2-clearance*2;
-	difference()
-    {
-        cube([x,h,wall]);
-        translate([x/2-22.5/2,h/2-7,-0.5]) cube([22.5,14,wall+1]);
-        translate([x/2-22.5/2-16.75,h/2,-0.5]) cylinder(d=12, h=wall+1);
-        translate([x/2-22.5/2-16.75+12,h/2,-0.5]) cylinder(d=3.2, h=wall+1);
-        translate([x/2-22.5/2-16.75+12,h/2-7.29,-0.5]) cylinder(d=3.2, h=wall+1);
-        translate([x/2+22.5/2+16.05,h/2,-0.5]) cylinder(d=7, h=wall+1);
-        translate([x/2+22.5/2+16.05,h/2+6,-0.5]) cylinder(d=3, h=wall);
+	difference(){
+	cube([x,h,wall]);
+	translate([x/2-22.5/2,h/2-7,-0.5]) cube([22.5,14,wall+1]);
+	translate([x/2-22.5/2-16.75,h/2,-0.5]) cylinder(d=12, h=wall+1);
+	translate([x/2-22.5/2-16.75+12,h/2,-0.5]) cylinder(d=3.2, h=wall+1);
+	translate([x/2-22.5/2-16.75+12,h/2-7.29,-0.5]) cylinder(d=3.2, h=wall+1);
+	translate([x/2+22.5/2+16.05,h/2,-0.5]) cylinder(d=7, h=wall+1);
+	translate([x/2+22.5/2+16.05,h/2+6,-0.5]) cylinder(d=3, h=wall);
 	}
 }
 module rearpanel(){
@@ -49,12 +49,12 @@ module rearpanel(){
 
 module bottom(){
 
-difference()
-    {
+difference(){
         union(){
 		difference(){
 		cube([x,y,h/2]);
-		translate([wall,wall*3+clearance*2,wall]) cube([x-wall*2,y-wall*6-clearance*4,h/2+wall]);
+		translate([wall,wall*4+clearance*2,wall]) 
+            cube([x-wall*2,y-wall*8-clearance*4,h/2+wall]);
 		}
 //support for power supply
 		translate([x/2-47.22/2,y-powersupply_y,0]) cylinder(d=8, h=5+wall);
@@ -81,15 +81,15 @@ difference()
 		translate([x-wall,15+wall*3,0]) cube([wall,8,h/2]);
 		}
 	}
-    
 	//front
-	translate([wall*2,-wall,wall*2]) cube([x-wall*4,wall*5,h/2]);
-	translate([wall,wall,wall]) cube([x-wall*2,wall+clearance*2,h/2+wall]);
-    
-	//rear
+	translate([wall*2,-wall,wall*2]) cube([x-wall*4,wall*6,h/2]);
+	translate([wall,wall,wall]) cube([x-wall*2,endplateThickness,h/2+wall]);
+	
+    //rear
 	translate([wall*2,y-wall*2,wall*2]) cube([x-wall*4,wall*3,h/2]);
-	translate([wall+8,y-wall*4,wall*2]) cube([x-wall*2-16,wall*5,h/2]);
-	translate([wall,y-wall*2-clearance*2,wall]) cube([x-wall*2,wall+clearance*2,h/2+wall]);
+	translate([wall+8,y-wall*6,wall*2]) cube([x-wall*2-16,wall*5,h/2]);
+	translate([wall,y-wall*3-clearance*2,wall]) cube([x-wall*2,endplateThickness,h/2+wall]);
+    
     
     //screw support for power supply
 	translate([x/2-47.22/2,y-powersupply_y,0.2]) cylinder(d=2.8, h=5+wall);
@@ -127,7 +127,8 @@ difference(){
 		cube([x,y,h/2]);
 		translate([wall,wall*3+clearance*2,wall]) cube([x-wall*2,y-wall*6-clearance*4,h/2+wall]);
 		}
-//top support screw
+        
+        //top support screw
 		hull(){
 		translate([wall+8/2,y-wall*3-8/2,0]) cylinder(d=8, h=h/2);
 		translate([0,y-wall*3-8,0]) cube([wall,8,h/2]);
@@ -147,14 +148,17 @@ difference(){
 		translate([x-wall,15+wall*3,0]) cube([wall,8,h/2]);
 		}
 	}
+    
 	//front
 	translate([wall*2,-wall,wall*2]) cube([x-wall*4,wall*5,h/2]);
 	translate([wall,wall,wall]) cube([x-wall*2,wall+clearance*2,h/2+wall]);
-	//rear
+	
+    //rear
 	translate([wall*2,y-wall*2,wall*2]) cube([x-wall*4,wall*3,h/2]);
 	translate([wall+8,y-wall*4,wall*2]) cube([x-wall*2-16,wall*5,h/2]);
 	translate([wall,y-wall*2-clearance*2,wall]) cube([x-wall*2,wall+clearance*2,h/2+wall]);
-//top screw
+
+    //top screw
 	translate([wall+8/2,y-wall*3-8/2,1]) cylinder(d=2.7, h=h);
 	translate([x-wall-8/2,y-wall*3-8/2,1]) cylinder(d=2.7, h=h);
 	translate([wall+8/2,15+wall*3+8/2,1]) cylinder(d=2.7, h=h);
