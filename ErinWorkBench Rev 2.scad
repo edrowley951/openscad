@@ -13,7 +13,7 @@ CasterHeight = 4;          //how tall are your casters
 
 
 //Calulated Values
-RailLength = WorkBenchLength;
+RailLength = WorkBenchLength - (2*BoardThickness);
 BeamLength = WorkBenchDepth-(2*BoardThickness);
 NumberOfTableTopSupportBeams = 1; //Number of Beams for support
 LegHeight = WorkBenchHeight - CasterHeight - TableTopThickness;
@@ -51,9 +51,9 @@ module DrawBeams(numBeams, height)
 module DrawShelf(height)
 {
     translate([0,0,height])
-    Draw2by4(WorkBenchLength);
+    Draw2by4(RailLength);
     translate([0,BeamLength+BoardThickness,height])
-    Draw2by4(WorkBenchLength);
+    Draw2by4(RailLength);
     DrawBeams(NumberOfTableTopSupportBeams, height);
 }
 
