@@ -14,7 +14,7 @@ CasterHeight = 4;          //how tall are your casters
 
 //Calulated Values
 RailLength = WorkBenchLength - (2 * BoardThickness);
-BeamLength = WorkBenchDepth - (2 * BoardThickness);
+BeamLength = WorkBenchDepth - (4 * BoardThickness);
 NumberOfTableTopSupportBeams = 3;                                   //Number of Beams for support
 NumberOfBottomShelfSupportBeams = 2;                                //Number of beams for the bottom shelf
 LegHeight = WorkBenchHeight - CasterHeight - TableTopThickness;
@@ -30,10 +30,13 @@ module Draw2by4(boardLength)
 
 module DrawRails(depth, height)
 {
-    translate([0,0,height])
-    Draw2by4(RailLength);
-    translate([0,depth+BoardThickness,height])
-    Draw2by4(RailLength);
+    color("yellow")
+    {
+        translate([0,0,height])
+        Draw2by4(RailLength);
+        translate([0,depth+BoardThickness,height])
+        Draw2by4(RailLength);
+    }
 }
 
 
@@ -65,14 +68,8 @@ module DrawShelf(shelfHeight, numberOfBeams)
 }
 
 
+
 module DrawLegs()
-{
-    translate([0,0,CasterHeight])
-    {
-        DrawLegs2();   
-    }
-}
-module DrawLegs2()
 {
 
     color("blue")
@@ -101,37 +98,61 @@ module DrawLegs2()
             rotate([0,270,270])
                 Draw2by4(LegHeight);
 
-        translate([BoardThickness,BeamLength + (BoardThickness*3),0])
-            rotate([0,270,90])
-                Draw2by4(LegHeight);   
-    
         translate([RailLength + BoardThickness,BoardThickness,0])
             rotate([0,270,270])
                 Draw2by4(LegHeight);
+        
+        translate([0,BeamLength+(BoardThickness * 3) - BoardWidth ,0])
+            rotate([0,270,270])
+                Draw2by4(LegHeight);   
                 
-        translate([RailLength + (BoardThickness * 2),BeamLength + (BoardThickness * 3),0])
-            rotate([0,270,90])
+        translate([RailLength + BoardThickness,BeamLength+(BoardThickness * 3) - BoardWidth,0])
+            rotate([0,270,270])
                 Draw2by4(LegHeight);    
     }
-    
+ }
+
+module DrawTableTop()
+{
+    color("magenta")
+    translate([0,0,LegHeight])
+        %cube([WorkBenchLength,WorkBenchDepth,TableTopThickness]);
+}
+
+module DrawShelfTop()
+{
+    color("purple")
+    translate([0,0,BoardWidth])
+        %cube([RailLength,BeamLength + (BoardThickness * 2),ShelfTopThickness]);
     
 }
 
+
 module DrawWorkBench()
 {
-    translate([BoardThickness,BoardThickness,CasterHeight]) // Make Room for Legs and Casters
+    translate([0,0,CasterHeight]) // Make Room for Legs and Casters
     {
-        Debug("Leg Height", LegHeight);
-        //Drop Top
-        Debug("*******TOP*******", "Begin");
-        DrawShelf(LegHeight-BoardWidth, NumberOfTableTopSupportBeams);  //Place Top at top of Leg
-        Debug("*******TOP*******", "End");
+        translate([BoardThickness,BoardThickness,0])
+        {
+            Debug("Leg Height", LegHeight);
+            //Drop Top
+            Debug("*******TOP*******", "Begin");
+            DrawShelf(LegHeight-BoardWidth, NumberOfTableTopSupportBeams);  //Place Top at top of Leg
+            Debug("*******TOP*******", "End");
 
-        Debug("*******Bottom Shelf*******", "Begin");
-        DrawShelf(0, NumberOfBottomShelfSupportBeams);
-        Debug("*******Bottom Shelf*******", "End");
+            Debug("*******Bottom Shelf*******", "Begin");
+            DrawShelf(0, NumberOfBottomShelfSupportBeams);
+            Debug("*******Bottom Shelf*******", "End");
+        
+            DrawShelfTop();
+        }
+        
+        DrawLegs();
+        DrawTableTop();
     }
-    DrawLegs();
+   
+    
+
 }
 
 module Debug(caption, message)
