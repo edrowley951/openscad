@@ -1,8 +1,6 @@
-
 WorkBenchLength = 5*12;     //Length of Table
 WorkBenchDepth = 24;        //Width of Table
 WorkBenchHeight = 36;        //Total Height of WorkBench
-
 
 //Stock Info
 BoardWidth = 3.5;           //Width of Boards (Using 2x4s)
@@ -10,18 +8,14 @@ BoardThickness = 1.5;       //Thickness of Boards (Using 2x4s)
 TableTopThickness = .75;    //Thickness of TableTop (Using 3/4 inch MDF)
 ShelfTopThickness = .5;     //Thickness of ShelfTop (using 1/2 inch MDF)
 CasterHeight = 4;          //how tall are your casters
-
+RawBoardLength = 84;
 
 //Calulated Values
 RailLength = WorkBenchLength - (2 * BoardThickness);
 BeamLength = WorkBenchDepth - (4 * BoardThickness);
-NumberOfTableTopSupportBeams = 3;                                   //Number of Beams for support
+NumberOfTableTopSupportBeams = 2;                                   //Number of Beams for support
 NumberOfBottomShelfSupportBeams = 2;                                //Number of beams for the bottom shelf
 LegHeight = WorkBenchHeight - CasterHeight - TableTopThickness;
-
-
-
-
 
 module Draw2by4(boardLength)
 {
@@ -32,13 +26,17 @@ module DrawRails(depth, height)
 {
     color("yellow")
     {
+        totalRails = 2;
+        
+        Debug("Total Rails", totalRails);
+        Debug("Rail Length", RailLength);
+        Debug("Rails per raw board", RawBoardLength / RailLength);
         translate([0,0,height])
         Draw2by4(RailLength);
         translate([0,depth+BoardThickness,height])
         Draw2by4(RailLength);
     }
 }
-
 
 module DrawBeams(numBeams, height)
 {
@@ -47,8 +45,10 @@ module DrawBeams(numBeams, height)
         totalBeams = 2 + numBeams;  //Account for "end" beams along with addition beams in between(numBeans)
         
         Debug("Total Beams", totalBeams);
-        Debug("Rail Length", RailLength);
+        ///Debug("Rail Length", RailLength);
         Debug("Beam Step", RailLength / (totalBeams - 1));
+        Debug("Beam Length", BeamLength);
+        Debug("Beams per raw board", RawBoardLength / BeamLength);
 
         for(currentPosition = [BoardThickness: (RailLength - BoardThickness) / (totalBeams - 1) :RailLength + BoardThickness])
         {
@@ -67,11 +67,8 @@ module DrawShelf(shelfHeight, numberOfBeams)
     DrawBeams(numberOfBeams, shelfHeight);
 }
 
-
-
 module DrawLegs()
 {
-
     color("blue")
     {
         translate([BoardWidth,0,0])
@@ -127,12 +124,11 @@ module DrawShelfTop()
     
 }
 
-
 module DrawWorkBench()
 {
-    translate([0,0,CasterHeight]) // Make Room for Legs and Casters
+    translate([0,0,CasterHeight]) //Casters
     {
-        translate([BoardThickness,BoardThickness,0])
+        translate([BoardThickness,BoardThickness,0]) 
         {
             Debug("Leg Height", LegHeight);
             //Drop Top
@@ -150,9 +146,6 @@ module DrawWorkBench()
         DrawLegs();
         DrawTableTop();
     }
-   
-    
-
 }
 
 module Debug(caption, message)
